@@ -173,7 +173,7 @@ if __name__ == "__main__":
     print("\nProcessing APTOS Dataset...\n")
     process_dataset(APTOS_METADATA)
 
-    print("\nProcessing IDRiD Dataset...\n")
-    process_dataset(IDRID_METADATA)
+    #print("\nProcessing IDRiD Dataset...\n")
+    #process_dataset(IDRID_METADATA)
 
     print("\nPreprocessing Completed Successfully!")

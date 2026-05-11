@@ -1,25 +1,12 @@
 import tensorflow as tf
-import pandas as pd
 
 from training.model import build_model
+
 from training.create_datasets import (
     train_dataset,
     val_dataset,
-    test_dataset
-)
-
-from training.utils import get_class_weights
-
-# =========================================
-# LOAD METADATA
-# =========================================
-
-df = pd.read_csv(
-    "metadata/aptos_metadata.csv"
-)
-
-class_weights = get_class_weights(
-    df["diagnosis"]
+    TRAIN_STEPS,
+    VAL_STEPS
 )
 
 # =========================================
@@ -29,12 +16,13 @@ class_weights = get_class_weights(
 model = build_model()
 
 # =========================================
-# COMPILE
+# COMPILE MODEL
 # =========================================
 
 model.compile(
+
     optimizer=tf.keras.optimizers.Adam(
-        learning_rate=1e-3
+        learning_rate=1e-4
     ),
 
     loss="categorical_crossentropy",
@@ -51,23 +39,39 @@ model.compile(
 callbacks = [
 
     tf.keras.callbacks.EarlyStopping(
+
+        monitor="val_loss",
+
         patience=5,
+
         restore_best_weights=True
     ),
 
     tf.keras.callbacks.ReduceLROnPlateau(
+
+        monitor="val_loss",
+
         factor=0.2,
-        patience=2
+
+        patience=2,
+
+        verbose=1
     ),
 
     tf.keras.callbacks.ModelCheckpoint(
-        "models/best_model.keras",
-        save_best_only=True
+
+        filepath="models/best_model.keras",
+
+        monitor="val_loss",
+
+        save_best_only=True,
+
+        verbose=1
     )
 ]
 
 # =========================================
-# TRAIN
+# TRAIN MODEL
 # =========================================
 
 history = model.fit(
@@ -78,18 +82,19 @@ history = model.fit(
 
     epochs=15,
 
-    class_weight=class_weights,
+    steps_per_epoch=TRAIN_STEPS,
+
+    validation_steps=VAL_STEPS,
 
     callbacks=callbacks
 )
 
 # =========================================
-# TEST EVALUATION
+# SAVE FINAL MODEL
 # =========================================
 
-results = model.evaluate(
-    test_dataset
+model.save(
+    "models/final_model.keras"
 )
 
-print("\nTest Results:")
-print(results)
+print("\nTraining Completed Successfully!")

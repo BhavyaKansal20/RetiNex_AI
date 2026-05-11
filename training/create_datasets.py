@@ -5,8 +5,9 @@ import pandas as pd
 # SETTINGS
 # =========================================
 
-IMAGE_SIZE = 384
+IMAGE_SIZE = 299
 BATCH_SIZE = 16
+NUM_CLASSES = 5
 
 # =========================================
 # LOAD METADATA
@@ -22,7 +23,12 @@ df = pd.read_csv(
 
 train_df = df[df["split"] == "train"]
 val_df = df[df["split"] == "val"]
-test_df = df[df["split"] == "test"]
+
+# =========================================
+# EFFICIENTNET PREPROCESSING
+# =========================================
+
+preprocess_input = tf.keras.applications.efficientnet_v2.preprocess_input
 
 # =========================================
 # IMAGE LOADER
@@ -45,9 +51,14 @@ def load_image(image_path, label):
     image = tf.cast(
         image,
         tf.float32
-    ) / 255.0
+    )
 
-    label = tf.one_hot(label, depth=5)
+    image = preprocess_input(image)
+
+    label = tf.one_hot(
+        label,
+        depth=NUM_CLASSES
+    )
 
     return image, label
 
@@ -70,9 +81,16 @@ def create_dataset(dataframe, training=False):
     )
 
     if training:
-        dataset = dataset.shuffle(1000)
 
-    dataset = dataset.batch(BATCH_SIZE)
+        dataset = dataset.shuffle(
+            buffer_size=1000
+        )
+
+    dataset = dataset.repeat()
+
+    dataset = dataset.batch(
+        BATCH_SIZE
+    )
 
     dataset = dataset.prefetch(
         tf.data.AUTOTUNE
@@ -93,24 +111,31 @@ val_dataset = create_dataset(
     val_df
 )
 
-test_dataset = create_dataset(
-    test_df
-)
+# =========================================
+# TRAINING STEPS
+# =========================================
+
+TRAIN_STEPS = len(train_df) // BATCH_SIZE
+
+VAL_STEPS = len(val_df) // BATCH_SIZE
 
 # =========================================
-# TEST PIPELINE
+# TEST
 # =========================================
 
 if __name__ == "__main__":
 
-    print("\nTrain batches:")
-    print(len(train_dataset))
+    print("\nTrain Samples:")
+    print(len(train_df))
 
-    print("\nValidation batches:")
-    print(len(val_dataset))
+    print("\nValidation Samples:")
+    print(len(val_df))
 
-    print("\nTest batches:")
-    print(len(test_dataset))
+    print("\nTrain Steps:")
+    print(TRAIN_STEPS)
+
+    print("\nValidation Steps:")
+    print(VAL_STEPS)
 
     for images, labels in train_dataset.take(1):
 

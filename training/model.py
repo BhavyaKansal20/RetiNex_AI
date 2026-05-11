@@ -6,7 +6,7 @@ from tensorflow.keras import models
 # SETTINGS
 # =========================================
 
-IMAGE_SIZE = 384
+IMAGE_SIZE = 299
 NUM_CLASSES = 5
 
 # =========================================
