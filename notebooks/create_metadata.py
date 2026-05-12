@@ -21,8 +21,9 @@ def create_aptos_metadata():
     all_dfs = []
 
     split_files = {
-        "train": "train_split.csv",
-        "val": "val.csv"
+    "train": "train.csv",
+    "val": "val.csv",
+    "test": "test.csv"
     }
 
     for split, csv_file in split_files.items():

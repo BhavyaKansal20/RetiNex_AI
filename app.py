@@ -1,13 +1,13 @@
 """
-RetiNexAI - Flask Application Entry Point
+RetiNex AI — FastAPI Application Entry Point
 
-This is the main Flask application for the RetiNexAI system.
-Routes and business logic are organized in the backend module.
+Run with: uvicorn app:app --reload --host 0.0.0.0 --port 8000
 """
 
-from flask import Flask
 from backend import create_app
 
-if __name__ == '__main__':
-    app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+app = create_app()
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

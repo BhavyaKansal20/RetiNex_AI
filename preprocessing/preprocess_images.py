@@ -8,7 +8,7 @@ import numpy as np
 # SETTINGS
 # =========================================
 
-IMAGE_SIZE = 384
+IMAGE_SIZE = 299
 
 APTOS_METADATA = "metadata/aptos_metadata.csv"
 IDRID_METADATA = "metadata/idrid_metadata.csv"

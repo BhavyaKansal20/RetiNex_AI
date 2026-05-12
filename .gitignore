@@ -2,7 +2,44 @@
 data/
 processed/
 models/
+uploads/
+generated_reports/
 *.zip
 *.keras
+*.h5
 __pycache__/
 .ipynb_checkpoints/
+.DS_Store
+.env
+backend/credentials/
+node_modules/
+frontend/dist/
+frontend/node_modules/
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Mac
+.DS_Store
+
+# Virtual env
+venv/
+.env
+
+# Large datasets
+data/
+processed/
+
+# Model weights
+*.h5
+*.keras
+*.ckpt
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+logs/
