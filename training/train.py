@@ -10,6 +10,18 @@ from training.create_datasets import (
 )
 
 # =========================================
+# CLASS WEIGHTS
+# =========================================
+
+CLASS_WEIGHTS = {
+    0: 0.269,
+    1: 3.993,
+    2: 1.215,
+    3: 13.843,
+    4: 7.240
+}
+
+# =========================================
 # BUILD MODEL
 # =========================================
 
@@ -28,7 +40,9 @@ model.compile(
     loss="categorical_crossentropy",
 
     metrics=[
-        "accuracy"
+        tf.keras.metrics.CategoricalAccuracy(
+            name="accuracy"
+        )
     ]
 )
 
@@ -44,7 +58,9 @@ callbacks = [
 
         patience=5,
 
-        restore_best_weights=True
+        restore_best_weights=True,
+
+        verbose=1
     ),
 
     tf.keras.callbacks.ReduceLROnPlateau(
@@ -86,7 +102,11 @@ history = model.fit(
 
     validation_steps=VAL_STEPS,
 
-    callbacks=callbacks
+    callbacks=callbacks,
+
+    class_weight=CLASS_WEIGHTS,
+
+    verbose=1
 )
 
 # =========================================

@@ -43,3 +43,27 @@ processed/
 
 # Logs
 logs/
+
+# Datasets
+dataset/
+
+# Trained Models
+models/*.keras
+models/*.h5
+models/*.pt
+models/*.pth
+
+# Reports
+generated_reports/
+
+# Uploads
+uploads/
+
+# Python
+__pycache__/
+*.pyc
+
+# Mac
+.DS_Store
+mytree.py
+metadata/retinex_balanced_v1.csv

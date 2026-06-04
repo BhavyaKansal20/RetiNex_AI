@@ -5,7 +5,7 @@ import pandas as pd
 # SETTINGS
 # =========================================
 
-IMAGE_SIZE = 299
+IMAGE_SIZE = 300
 BATCH_SIZE = 16
 NUM_CLASSES = 5
 
@@ -14,7 +14,7 @@ NUM_CLASSES = 5
 # =========================================
 
 df = pd.read_csv(
-    "metadata/aptos_metadata.csv"
+    "metadata/retinex_master_metadata.csv"
 )
 
 # =========================================
@@ -28,7 +28,9 @@ val_df = df[df["split"] == "val"]
 # EFFICIENTNET PREPROCESSING
 # =========================================
 
-preprocess_input = tf.keras.applications.efficientnet_v2.preprocess_input
+preprocess_input = (
+    tf.keras.applications.efficientnet_v2.preprocess_input
+)
 
 # =========================================
 # IMAGE LOADER
@@ -38,10 +40,13 @@ def load_image(image_path, label):
 
     image = tf.io.read_file(image_path)
 
-    image = tf.image.decode_png(
+    image = tf.image.decode_image(
         image,
-        channels=3
+        channels=3,
+        expand_animations=False
     )
+
+    image.set_shape([None, None, 3])
 
     image = tf.image.resize(
         image,
@@ -71,7 +76,7 @@ def create_dataset(dataframe, training=False):
     dataset = tf.data.Dataset.from_tensor_slices(
         (
             dataframe["image_path"].values,
-            dataframe["diagnosis"].values
+            dataframe["label"].values
         )
     )
 
@@ -83,7 +88,7 @@ def create_dataset(dataframe, training=False):
     if training:
 
         dataset = dataset.shuffle(
-            buffer_size=1000
+            buffer_size=5000
         )
 
     dataset = dataset.repeat()

@@ -6,7 +6,7 @@ from tensorflow.keras import models
 # SETTINGS
 # =========================================
 
-IMAGE_SIZE = 299
+IMAGE_SIZE = 300
 NUM_CLASSES = 5
 
 # =========================================
@@ -15,7 +15,7 @@ NUM_CLASSES = 5
 
 def build_model():
 
-    base_model = tf.keras.applications.EfficientNetV2B0(
+    base_model = tf.keras.applications.EfficientNetV2B3(
         include_top=False,
         weights="imagenet",
         input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3)
